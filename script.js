@@ -1,9 +1,7 @@
-// Initialize Google Drive API with your API key
+// Initialize Google Drive API with your OAuth2 client ID
 function initClient() {
     gapi.client.init({
-        apiKey: '637925006165-ikssgig311emd4t83dbn03867591ka8v.apps.googleusercontent.com',
-        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
-        clientId: '637925006165-ikssgig311emd4t83dbn03867591ka8v.apps.googleusercontent.com',
+        clientId: 'YOUR_OAUTH2_CLIENT_ID',
         scope: 'https://www.googleapis.com/auth/drive.file',
     }).then(function () {
         console.log('Google Drive API initialized.');
@@ -29,7 +27,7 @@ function uploadFile(file) {
     const metadata = {
         name: file.name,
         mimeType: file.type,
-        parents: ['Y10e9_TNVAz0rm3sSvEcuh4P1KZujGDqlG'],
+        parents: ['YOUR_GOOGLE_DRIVE_FOLDER_ID'], // Replace with the folder ID where you want to store the files
     };
 
     const reader = new FileReader();

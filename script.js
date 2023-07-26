@@ -1,7 +1,7 @@
 // Initialize Google Drive API with your API key
 function initClient() {
     gapi.client.init({
-        apiKey: 'ya29.a0AbVbY6M9FJyRGZglKGKgdwsb33TqYxJhuBaioYc_-9P4B019d6KNbr2cRVy-Zh2qvto0opPFg0pDNmzAe9dcK0NZrBLfuHHWez47nL_uICSq4u39eR0LVQfZDXDiCoR8uvEhVStXI9l6TazZSUIlA8dal7glXpf-aCgYKAVASARESFQFWKvPlWlePVoaNwWkbhOXD-KKozA0167',
+        apiKey: '637925006165-ikssgig311emd4t83dbn03867591ka8v.apps.googleusercontent.com',
         discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
         clientId: '637925006165-ikssgig311emd4t83dbn03867591ka8v.apps.googleusercontent.com',
         scope: 'https://www.googleapis.com/auth/drive.file',

@@ -1,7 +1,6 @@
 let driveApiLoaded = false;
-const fileInput = document.getElementById('fileInput');
-const uploadButton = document.getElementById('uploadButton');
-const playlist = document.getElementById('playlist');
+const musicPlayer = document.getElementById('music-player');
+const playButton = document.getElementById('playButton');
 
 // Load the Google Drive API client
 function loadDriveApi() {
@@ -11,57 +10,65 @@ function loadDriveApi() {
   });
 }
 
-// Handle file upload when the "Upload" button is clicked
-uploadButton.addEventListener('click', () => {
+// Handle "Play Playlist" button click
+playButton.addEventListener('click', () => {
   if (driveApiLoaded) {
-    const file = fileInput.files[0];
-    if (!file) return;
-
-    // Upload the file to Google Drive
-    uploadFileToDrive(file)
-      .then((response) => {
-        const fileId = response.result.id;
-        const fileUrl = `https://drive.google.com/uc?export=download&id=10e9_TNVAz0rm3sSvEcuh4P1KZujGDqlG`;
-        
-        // Add the uploaded file to the community playlist
-        const listItem = document.createElement('li');
-        listItem.setAttribute('data-src', fileUrl);
-        listItem.textContent = file.name;
-        playlist.appendChild(listItem);
-        
-        console.log(`File uploaded: ${file.name}`);
-      })
-      .catch((error) => {
-        console.error('Error uploading the file:', error);
-      });
+    playGoogleDrivePlaylist();
   }
 });
 
-// Upload file to Google Drive
-function uploadFileToDrive(file) {
-  return gapi.client.drive.files.create({
-    resource: {
-      name: file.name,
-      mimeType: 'audio/mpeg',
-      parents: [ '10e9_TNVAz0rm3sSvEcuh4P1KZujGDqlG' ] // Replace with your folder ID
-    },
-    media: {
-      mimeType: 'audio/mpeg',
-      body: file
+// Play Google Drive playlist
+function playGoogleDrivePlaylist() {
+  gapi.client.drive.files.list({
+    q: "'10e9_TNVAz0rm3sSvEcuh4P1KZujGDqlG' in parents", // Replace with your folder ID
+    fields: 'files(name, webContentLink)',
+  }).then((response) => {
+    const files = response.result.files;
+    if (files && files.length > 0) {
+      const playlistUrls = files.map((file) => file.webContentLink);
+      playFilesInOrder(playlistUrls);
+    } else {
+      console.log('No files found in the Google Drive folder.');
     }
+  }).catch((error) => {
+    console.error('Error listing files:', error);
   });
+}
+
+// Play files in order from an array of URLs
+function playFilesInOrder(urls) {
+  let currentFileIndex = 0;
+
+  function playNextFile() {
+    if (currentFileIndex >= urls.length) {
+      console.log('End of playlist.');
+      return;
+    }
+
+    const currentUrl = urls[currentFileIndex];
+    musicPlayer.src = currentUrl;
+    musicPlayer.play();
+
+    musicPlayer.onended = function() {
+      currentFileIndex++;
+      playNextFile();
+    };
+  }
+
+  playNextFile();
 }
 
 // Initialize the API client and load the Google Drive API
 function initClient() {
   gapi.client.init({
-    apiKey: 'ya29.a0AbVbY6NEq8dlu9vAf4a_VXDud0ScLw-6EMQPYEu3JqJ8Nrzjyr8Ur6Wuc9AZIPpjOZD2osLbzphRkd4GUu4C-_wpHMKtxJo3G65tk0gj8zc2L_Pd70Hz6zZooairiMPJDa4Y21kbUYTNLdeyiWYIc-hQ5S2caCgYKAewSARESFQFWKvPlIHthKlXGL4SEE9B5XwuJCQ0163', // Replace with your API key
+    apiKey: 'YOUR_GOOGLE_DRIVE_API_KEY', // Replace with your Google Drive API key
     discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
     scope: 'https://www.googleapis.com/auth/drive.file'
   }).then(() => {
     loadDriveApi();
   });
 }
+
 
 // Load the API client and authenticate the user
 gapi.load('client', initClient);

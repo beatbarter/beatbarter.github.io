@@ -1,7 +1,7 @@
 // Initialize Google Drive API with your OAuth2 client ID
 function initClient() {
     gapi.client.init({
-        clientId: 'YOUR_OAUTH2_CLIENT_ID',
+        clientId: '637925006165-ikssgig311emd4t83dbn03867591ka8v.apps.googleusercontent.com',
         scope: 'https://www.googleapis.com/auth/drive.file',
     }).then(function () {
         console.log('Google Drive API initialized.');
@@ -27,14 +27,12 @@ function uploadFile(file) {
     const metadata = {
         name: file.name,
         mimeType: file.type,
-        parents: ['YOUR_GOOGLE_DRIVE_FOLDER_ID'], // Replace with the folder ID where you want to store the files
+        parents: ['10e9_TNVAz0rm3sSvEcuh4P1KZujGDqlG'], // Replace with the folder ID where you want to store the files
     };
 
     const reader = new FileReader();
     reader.onload = function (e) {
-        const fileData = e.target.result;
-        const base64Data = fileData.substr(fileData.indexOf('base64,') + 7);
-
+        const base64Data = e.target.result.split(',')[1]; // Get the base64 data after the comma
         const blob = new Blob([base64Data], { type: file.type });
         const formData = new FormData();
         formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));

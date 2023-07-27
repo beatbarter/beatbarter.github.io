@@ -1,3 +1,15 @@
+if (event.target.files) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    const file = event.target.files[0];
+    const dataURL = reader.result;
+    // Do something with the file data.
+  };
+  reader.readAsDataURL(event.target.files[0]);
+} else {
+  // No file was selected.
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     // Initialize Google Drive API with your OAuth2 client ID
     function initClient() {

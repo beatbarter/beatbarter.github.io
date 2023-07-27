@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function initClient() {
         gapi.load('client:auth2', () => {
             gapi.client.init({
-                clientId: 'YOUR_CLIENT_ID', // Replace with your own client ID
+                clientId: '637925006165-ikssgig311emd4t83dbn03867591ka8v.apps.googleusercontent.com', // Replace with your own client ID
                 scope: 'https://www.googleapis.com/auth/drive.file',
             }).then(function () {
                 console.log('Google Drive API initialized.');

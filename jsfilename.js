@@ -26,35 +26,42 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to upload the file to Google Drive
-    function uploadFile(file) {
-        const metadata = {
-            name: file.name,
-            mimeType: file.type,
-            parents: ['10e9_TNVAz0rm3sSvEcuh4P1KZujGDqlG'], // Replace with the folder ID where you want to store the files
-        };
+  // Function to upload the file to Google Drive
+function uploadFile(file) {
+    const metadata = {
+        name: file.name,
+        mimeType: file.type,
+        parents: ['10e9_TNVAz0rm3sSvEcuh4P1KZujGDqlG'], // Replace with the folder ID where you want to store the files
+    };
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const base64Data = e.target.result.split(',')[1]; // Get the base64 data after the comma
-            const blob = new Blob([base64Data], { type: file.type });
-            const formData = new FormData();
-            formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-            formData.append('file', blob);
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const base64Data = e.target.result.split(',')[1]; // Get the base64 data after the comma
+        const blob = new Blob([base64Data], { type: file.type });
 
-            gapi.client.drive.files.create({
-                resource: metadata,
-                media: { body: formData },
-                fields: 'id',
-            }).then(function (response) {
-                console.log('File uploaded successfully:', response.result);
-                displayUploadedFile(file.name, response.result.id);
-            }).catch(function (error) {
-                console.error('Error uploading file:', error);
-            });
-        };
-        reader.readAsDataURL(file);
-    }
+        // Use the new gapi.client.request method to upload the file
+        gapi.client.request({
+            path: '/drive/v3/files',
+            method: 'POST',
+            params: {
+                uploadType: 'multipart',
+            },
+            headers: {
+                'Content-Type': 'multipart/related;',
+            },
+            body: {
+                metadata: JSON.stringify(metadata),
+                file: blob,
+            },
+        }).then(function (response) {
+            console.log('File uploaded successfully:', response.result.id);
+            displayUploadedFile(file.name, response.result.id);
+        }).catch(function (error) {
+            console.error('Error uploading file:', error);
+        });
+    };
+    reader.readAsDataURL(file);
+}
 
     // Function to display the uploaded files in the shared playlist with audio playback
     function displayUploadedFile(filename, fileId) {

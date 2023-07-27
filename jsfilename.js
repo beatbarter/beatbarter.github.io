@@ -71,9 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    document.getElementById('uploadForm').addEventListener('submit', function (event) {
-        handleFormSubmit(event);
-    });
+document.getElementById('uploadForm').addEventListener('submit', (event) => handleFormSubmit(event));
 
     // Load the Google Drive API client library
     gapi.load('client:auth2', initClient);

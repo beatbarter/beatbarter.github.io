@@ -1,3 +1,4 @@
+document.addEventListener('DOMContentLoaded', function () {
 // Initialize Google Drive API with your OAuth2 client ID
 function initClient() {
     gapi.client.init({
@@ -10,18 +11,17 @@ function initClient() {
     });
 }
 
-// Function to handle the file upload form submission
-function handleFormSubmit(event) {
-    event.preventDefault();
-    const fileInput = document.getElementById('fileInput');
-    const files = fileInput.files;
+ // Function to handle the file upload form submission
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        const fileInput = document.getElementById('fileInput');
+        const files = fileInput.files;
 
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        uploadFile(file);
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            uploadFile(file);
+        }
     }
-}
-
 // Function to upload the file to Google Drive
 function uploadFile(file) {
     const metadata = {
@@ -72,5 +72,6 @@ function displayUploadedFile(filename, fileId) {
 
 document.getElementById('uploadForm').addEventListener('submit', handleFormSubmit);
 
-// Load the Google Drive API client library
-gapi.load('client:auth2', initClient);
+    // Load the Google Drive API client library
+    gapi.load('client:auth2', initClient);
+});
